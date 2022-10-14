@@ -38,7 +38,7 @@ jobs:
     - name: create release
       uses: swisstxt/github-action-release-artifacts@master
       with:
-        created_tag: ${{ github.ref_name }}
+        tag: ${{ github.ref_name }}
         create_release: true
         release_name: "my project ${{ github.ref_name }}"
       permissions:

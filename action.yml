@@ -13,7 +13,7 @@ inputs:
       Upload all files in the working directory if missing.
     default: ""
     required: false
-  created_tag:
+  tag:
     description: |
       Create a release from a specific tag.
       If missing, try to derive it from the commit ID.
