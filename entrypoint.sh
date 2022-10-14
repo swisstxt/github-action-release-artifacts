@@ -36,11 +36,11 @@ HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
 if [ "$HTTP_STATUS" -eq 200 ]; then
   echo "::notice::Existing release found"
     CONTENT=$(echo "$RESPONSE" | sed "$ d" | jq --args)
-    RELEASE_ID=$(echo "$CONTENT" | jq ".id")
+    UPLOAD_URL=$(echo "$CONTENT" | jq ".upload_url")
     echo "::notice::Release found"
-    echo "::set-output name=id::${RELEASE_ID}"
+    echo "::set-output name=id::$(echo "$CONTENT" | jq ".id")"
     echo "::set-output name=html_url::$(echo "$CONTENT" | jq ".html_url")"
-    echo "::set-output name=upload_url::$(echo "$CONTENT" | jq ".upload_url")"
+    echo "::set-output name=upload_url::${UPLOAD_URL}"
 elif [ "$HTTP_STATUS" -eq 403 ]; then
   echo "::error::Authorization error when accessing the GitHub API"
   exit 1
@@ -61,9 +61,11 @@ elif [ "$HTTP_STATUS" -eq 404 ]; then
 
     if [ "$HTTP_STATUS" -eq 201 ]; then
       echo "::notice::Release successfully created"
+      UPLOAD_URL=$(echo "$CONTENT" | jq ".upload_url")
+      echo "::notice::Release found"
       echo "::set-output name=id::$(echo "$CONTENT" | jq ".id")"
       echo "::set-output name=html_url::$(echo "$CONTENT" | jq ".html_url")"
-      echo "::set-output name=upload_url::$(echo "$CONTENT" | jq ".upload_url")"
+      echo "::set-output name=upload_url::${UPLOAD_URL}"
     else
       echo "::error::Failed to create release: ${HTTP_STATUS}"
       echo "$CONTENT" | jq ".errors"
@@ -80,8 +82,8 @@ fi
 
 PATHS=${INPUT_FILES:-.}
 
-# important: the RELEASE_ID must be exported, or it won't be visible in subshells
-export RELEASE_ID
+# important: the UPLOAD_URL must be exported, or it won't be visible in subshells
+export UPLOAD_URL
 
 for path in ${PATHS}; do
   fullpath="${GITHUB_WORKSPACE}/${path}"
@@ -99,6 +101,6 @@ for path in ${PATHS}; do
       --header "${AUTH_HEADER}" \
       --header "Content-Type: application/octet-stream" \
       --data-binary @"${filepath}" \
-      "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets?name=${filename}" ;
+      "${UPLOAD_URL}?name=${filename}" ;
   ' \;
 done
