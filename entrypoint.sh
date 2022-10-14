@@ -20,16 +20,16 @@ fi
 # Prepare the headers
 AUTH_HEADER="Authorization: token ${INPUT_GITHUB_TOKEN}"
 
-RELEASE_ID=${INPUT_RELEASE_NAME:-$TAG}
+RELEASE_NAME=${INPUT_RELEASE_NAME:-$TAG}
 
-echo "::notice::Verifying release ${RELEASE_ID}"
+echo "::notice::Verifying release ${TAG}"
 RESPONSE=$(curl \
   --write-out "%{http_code}" \
   --silent \
   --show-error \
   --location \
   --header "${AUTH_HEADER}" \
-  "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_ID}"
+  "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${TAG}"
 )
 HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
 echo "::notice::Response: ${RESPONSE}"
@@ -50,7 +50,7 @@ else
       --location \
       --header "${AUTH_HEADER}" \
       --header "Content-Type: application/json" \
-      --data "{\"tag_name\":\"${TAG}\",\"draft\":${INPUT_CREATE_DRAFT},\"name\":\"${RELEASE_ID}\"}" \
+      --data "{\"tag_name\":\"${TAG}\",\"draft\":${INPUT_CREATE_DRAFT},\"name\":\"${RELEASE_NAME}\"}" \
       "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases")
     HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
     CONTENT=$(echo "$RESPONSE" | sed "$ d" | jq --args)
@@ -84,6 +84,6 @@ for path in ${PATHS}; do
     --header "${AUTH_HEADER}" \
     --header "Content-Type: application/octet-stream" \
     --data-binary @"{}" \
-    "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets?name=$(basename \{})" \
+    "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${TAG}/assets?name=$(basename \{})" \
   \;
 done
