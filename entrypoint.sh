@@ -35,6 +35,9 @@ HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
 
 if [ "$HTTP_STATUS" -eq 200 ]; then
   echo "::notice::Existing release found"
+elif [ "$HTTP_STATUS" -eq 403 ]; then
+  echo "::error::Authorization when accessing the GitHub API"
+  exit 1
 else
   if [ "${INPUT_CREATE_RELEASE}" = "true" ]; then
     echo "::notice::Creating new release"
