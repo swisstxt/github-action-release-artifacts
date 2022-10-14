@@ -78,7 +78,7 @@ for path in ${PATHS}; do
   fullpath="${GITHUB_WORKSPACE}/${path}"
   echo "::notice::Processing path ${fullpath}"
   find ${fullpath} -type f -exec curl \
-    --write-out "%{url} %{speed_upload}B/s %{size_upload}B %{response_code}\n" \
+    --write-out "${fullpath} %{speed_upload}B/s %{size_upload}B %{response_code}\n" \
     --silent \
     --show-error \
     --location \
