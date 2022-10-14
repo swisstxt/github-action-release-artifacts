@@ -84,7 +84,7 @@ for path in ${PATHS}; do
     --location \
     --header "${AUTH_HEADER}" \
     --header "Content-Type: application/octet-stream" \
-    --data-binary @"{}" \
+    --data-binary @"\{}" \
     "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${TAG}/assets?name=$(basename \{})" \
   \;
 done
