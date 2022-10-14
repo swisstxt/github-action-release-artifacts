@@ -35,6 +35,12 @@ HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
 
 if [ "$HTTP_STATUS" -eq 200 ]; then
   echo "::notice::Existing release found"
+    CONTENT=$(echo "$RESPONSE" | sed "$ d" | jq --args)
+    RELEASE_ID=$(echo "$CONTENT" | jq ".id")
+    echo "::notice::Release found"
+    echo "::set-output name=id::${RELEASE_ID}"
+    echo "::set-output name=html_url::$(echo "$CONTENT" | jq ".html_url")"
+    echo "::set-output name=upload_url::$(echo "$CONTENT" | jq ".upload_url")"
 elif [ "$HTTP_STATUS" -eq 403 ]; then
   echo "::error::Authorization error when accessing the GitHub API"
   exit 1
@@ -59,7 +65,7 @@ elif [ "$HTTP_STATUS" -eq 404 ]; then
       echo "::set-output name=html_url::$(echo "$CONTENT" | jq ".html_url")"
       echo "::set-output name=upload_url::$(echo "$CONTENT" | jq ".upload_url")"
     else
-      echo "::error::Failed to update release ($HTTP_STATUS):"
+      echo "::error::Failed to create release: ${HTTP_STATUS}"
       echo "$CONTENT" | jq ".errors"
       exit 1
     fi
@@ -85,6 +91,6 @@ for path in ${PATHS}; do
     --header "${AUTH_HEADER}" \
     --header "Content-Type: application/octet-stream" \
     --data-binary @"\{}" \
-    "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${TAG}/assets?name=$(basename \{})" \
+    "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets?name=$(basename \{})" \
   \;
 done
