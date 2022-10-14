@@ -56,6 +56,8 @@ jobs:
 * `release_name` - When creating a new release, use the value of this input as the release name. Otherwise, use the name of the tag.
 * `create_draft` - When creating a release, specifies if a normal (false) or draft (true) release should be created. Ignored when not creating a release.
 
+**Note**: If you use the `create_draft` option, a new draft will be created on every run.
+
 ## Acknowledgments + Legal
 
 Copyright © 2022 SWISS TXT AG - All rights reserved
