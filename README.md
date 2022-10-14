@@ -44,19 +44,24 @@ jobs:
         create_release: true
         release_name: "my project ${{ github.ref_name }}"
       permissions:
-        contents: read
-        packages: write
+        contents: write
 ```
 
 ## Inputs
 
-* `files` - List of files or paths to upload, separated by space. Upload all files in the workspace if missing. The paths are treated as workspace-relative.
-* `created_tag` - Create a release from a specific tag. If missing, try to derive it from the commit ID.
-* `create_release` - If false, fails when the release doesn't exist. If true and the release doesn't exist, it is created automatically.
-* `release_name` - When creating a new release, use the value of this input as the release name. Otherwise, use the name of the tag.
-* `create_draft` - When creating a release, specifies if a normal (false) or draft (true) release should be created. Ignored when not creating a release.
+* `files` - List of files or paths to upload, separated by space.
+  Upload all files in the workspace if missing. The paths are treated as workspace-relative.
+* `tag` - Create a release from a specific tag.
+  If missing, try to derive it from the current job's commit ID.
+* `create_release` - If false, fails when the release doesn't exist.
+  If true and the release doesn't exist, it is created automatically.
+* `release_name` - When creating a new release, use the value of this input as the release name.
+  Otherwise, use the name of the tag.
+* `create_draft` - When creating a release, specifies if a normal (false) or draft (true) release should be created.
+  Ignored when not creating a release.
 
-**Note**: If you use the `create_draft` option, a new draft will be created on every run.
+**Note**: If you use the `create_draft` option, a new draft release will be created on every run.
+Without the option, assets will be uploaded into an existing release. 
 
 ## Acknowledgments + Legal
 
