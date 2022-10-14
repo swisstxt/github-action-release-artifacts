@@ -88,6 +88,7 @@ for path in ${PATHS}; do
     --silent \
     --show-error \
     --location \
+    --fail-with-body \
     --header "${AUTH_HEADER}" \
     --header "Content-Type: application/octet-stream" \
     --data-binary @"\{}" \
