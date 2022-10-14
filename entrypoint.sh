@@ -80,6 +80,9 @@ fi
 
 PATHS=${INPUT_FILES:-.}
 
+# important: the RELEASE_ID must be exported, or it won't be visible in subshells
+export RELEASE_ID
+
 for path in ${PATHS}; do
   fullpath="${GITHUB_WORKSPACE}/${path}"
   echo "::notice::Processing path ${fullpath}"
