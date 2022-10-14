@@ -37,8 +37,11 @@ inputs:
       Ignored when not creating a release.
     default: "false"
     required: false
+  github_token:
+    description: |
+      The GitHub token to use for authenticated API calls.
+    default: ${{ github.token }}
+    required: false
 runs:
   using: docker
   image: Dockerfile
-  env:
-    GITHUB_TOKEN: ${{ github.token }}

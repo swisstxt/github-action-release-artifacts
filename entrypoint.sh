@@ -18,7 +18,7 @@ if [ -z "${TAG}" ]; then
 fi
 
 # Prepare the headers
-AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
+AUTH_HEADER="Authorization: token ${INPUT_GITHUB_TOKEN}"
 
 RELEASE_ID=${INPUT_RELEASE_NAME:-$TAG}
 
