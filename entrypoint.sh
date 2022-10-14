@@ -70,9 +70,11 @@ else
 fi
 
 PATHS=${INPUT_FILES:-.}
+WORKSPACE=/github/workspace
+printenv
 
 for path in ${PATHS}; do
-  fullpath="$(dirname $0)/${path}"
+  fullpath="${WORKSPACE}/${path}"
   echo "::notice::Processing path ${fullpath}"
   find ${fullpath} -type f -exec echo curl \
     --write-out "%{url} %{speed_upload}B/s %{size_upload}B %{response_code}\n" \
