@@ -32,15 +32,13 @@ RESPONSE=$(curl \
   "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${TAG}"
 )
 HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
-echo "::notice::Response: ${RESPONSE}"
-echo "::notice::Status: ${HTTP_STATUS}"
 
 if [ "$HTTP_STATUS" -eq 200 ]; then
   echo "::notice::Existing release found"
 elif [ "$HTTP_STATUS" -eq 403 ]; then
-  echo "::error::Authorization when accessing the GitHub API"
+  echo "::error::Authorization error when accessing the GitHub API"
   exit 1
-else
+elif [ "$HTTP_STATUS" -eq 404 ]; then
   if [ "${INPUT_CREATE_RELEASE}" = "true" ]; then
     echo "::notice::Creating new release"
     RESPONSE=$(curl \
@@ -69,6 +67,9 @@ else
     echo "::error::Release is missing"
     exit 1
   fi
+else
+  echo "::error::Unknown status code: ${HTTP_STATUS}"
+  exit 1
 fi
 
 PATHS=${INPUT_FILES:-.}
