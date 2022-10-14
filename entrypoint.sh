@@ -82,8 +82,8 @@ fi
 
 PATHS=${INPUT_FILES:-.}
 
-# important: the UPLOAD_URL must be exported, or it won't be visible in subshells
-export UPLOAD_URL
+# important: the UPLOAD_URL must be stripped of templates and exported, or it won't be visible in subshells
+export UPLOAD_URL=${UPLOAD_URL%%{*\}}
 
 for path in ${PATHS}; do
   fullpath="${GITHUB_WORKSPACE}/${path}"
