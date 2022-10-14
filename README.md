@@ -50,7 +50,7 @@ jobs:
 
 ## Inputs
 
-* `files` - List of files or paths to upload, separated by space. Upload all files in the working directory if missing.
+* `files` - List of files or paths to upload, separated by space. Upload all files in the workspace if missing. The paths are treated as workspace-relative.
 * `created_tag` - Create a release from a specific tag. If missing, try to derive it from the commit ID.
 * `create_release` - If false, fails when the release doesn't exist. If true and the release doesn't exist, it is created automatically.
 * `release_name` - When creating a new release, use the value of this input as the release name. Otherwise, use the name of the tag.
