@@ -83,7 +83,7 @@ PATHS=${INPUT_FILES:-.}
 for path in ${PATHS}; do
   fullpath="${GITHUB_WORKSPACE}/${path}"
   echo "::notice::Processing path ${fullpath}"
-  find ${fullpath} -type f -print0 | xargs -n1 -0 -I{} curl \
+  find ${fullpath} -type f -exec sh -c 'curl \
     --write-out "%{url} %{speed_upload}B/s %{size_upload}B %{response_code}\n" \
     --silent \
     --show-error \
@@ -93,4 +93,5 @@ for path in ${PATHS}; do
     --header "Content-Type: application/octet-stream" \
     --data-binary @"{}" \
     https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets?name=$(basename "{}")
+  ' \;
 done
