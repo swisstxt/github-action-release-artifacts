@@ -22,7 +22,7 @@ AUTH_HEADER="Authorization: token ${INPUT_GITHUB_TOKEN}"
 
 RELEASE_ID=${INPUT_RELEASE_NAME:-$TAG}
 
-echo "::notice::Verifying release"
+echo "::notice::Verifying release ${RELEASE_ID}"
 RESPONSE=$(curl \
   --write-out "%{http_code}" \
   --silent \
@@ -32,6 +32,8 @@ RESPONSE=$(curl \
   "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_ID}"
 )
 HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
+echo "::notice::Response: ${RESPONSE}"
+echo "::notice::Status: ${HTTP_STATUS}"
 
 if [ "$HTTP_STATUS" -eq 200 ]; then
   echo "::notice::Existing release found"
@@ -70,13 +72,11 @@ else
 fi
 
 PATHS=${INPUT_FILES:-.}
-WORKSPACE=/github/workspace
-printenv
 
 for path in ${PATHS}; do
-  fullpath="${WORKSPACE}/${path}"
+  fullpath="${GITHUB_WORKSPACE}/${path}"
   echo "::notice::Processing path ${fullpath}"
-  find ${fullpath} -type f -exec echo curl \
+  find ${fullpath} -type f -exec curl \
     --write-out "%{url} %{speed_upload}B/s %{size_upload}B %{response_code}\n" \
     --silent \
     --show-error \
