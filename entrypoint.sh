@@ -17,7 +17,6 @@ if [ -z "${TAG}" ]; then
   exit 1
 fi
 
-# Prepare the headers
 AUTH_HEADER="Authorization: token ${INPUT_GITHUB_TOKEN}"
 
 RELEASE_NAME=${INPUT_RELEASE_NAME:-$TAG}
@@ -85,6 +84,8 @@ PATHS=${INPUT_FILES:-.}
 # important: the UPLOAD_URL must be stripped of templates and exported, or it won't be visible in subshells
 export UPLOAD_URL_STRIPPED=${UPLOAD_URL%%{*\}}
 echo "::notice::Upload URL: ${UPLOAD_URL_STRIPPED}"
+export UPLOAD_AUTH_HEADER="Authorization: Bearer ${INPUT_GITHUB_TOKEN}"
+
 
 for path in ${PATHS}; do
   fullpath="${GITHUB_WORKSPACE}/${path}"
@@ -99,7 +100,7 @@ for path in ${PATHS}; do
       --show-error \
       --location \
       --fail-with-body \
-      --header "${AUTH_HEADER}" \
+      --header "${UPLOAD_AUTH_HEADER}" \
       --header "Content-Type: application/octet-stream" \
       --data-binary @"${filepath}" \
       "${UPLOAD_URL_STRIPPED}?name=${filename}" ;
