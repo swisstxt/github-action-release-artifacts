@@ -83,7 +83,8 @@ fi
 PATHS=${INPUT_FILES:-.}
 
 # important: the UPLOAD_URL must be stripped of templates and exported, or it won't be visible in subshells
-export UPLOAD_URL=${UPLOAD_URL%%{*\}}
+export UPLOAD_URL_STRIPPED=${UPLOAD_URL%%{*\}}
+echo "::notice::Upload URL: ${UPLOAD_URL_STRIPPED}"
 
 for path in ${PATHS}; do
   fullpath="${GITHUB_WORKSPACE}/${path}"
@@ -101,6 +102,6 @@ for path in ${PATHS}; do
       --header "${AUTH_HEADER}" \
       --header "Content-Type: application/octet-stream" \
       --data-binary @"${filepath}" \
-      "${UPLOAD_URL}?name=${filename}" ;
+      "${UPLOAD_URL_STRIPPED}?name=${filename}" ;
   ' \;
 done
