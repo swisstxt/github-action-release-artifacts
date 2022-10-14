@@ -90,7 +90,7 @@ export UPLOAD_AUTH_HEADER="Authorization: Bearer ${INPUT_GITHUB_TOKEN}"
 for path in ${PATHS}; do
   fullpath="${GITHUB_WORKSPACE}/${path}"
   echo "::notice::Processing path ${fullpath}"
-  find ${fullpath} -type f -exec sh -c '
+  find ${fullpath} -type f -print0 | xargs -n1 -0 -I{} sh -c '
     filepath="{}" ;
     filename=$(basename "{}") ;
     echo "::notice::Uploading ${filename}" ;
@@ -104,5 +104,5 @@ for path in ${PATHS}; do
       --header "Content-Type: application/octet-stream" \
       --data-binary @"${filepath}" \
       "${UPLOAD_URL_STRIPPED}?name=${filename}" ;
-  ' \;
+  '
 done
