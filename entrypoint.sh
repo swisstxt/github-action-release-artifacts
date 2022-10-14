@@ -23,7 +23,7 @@ AUTH_HEADER="Authorization: token ${INPUT_GITHUB_TOKEN}"
 RELEASE_ID=${INPUT_RELEASE_NAME:-$TAG}
 
 echo "::notice::Verifying release"
-HTTP_RESPONSE=$(curl \
+RESPONSE=$(curl \
   --write-out "%{http_code}" \
   --silent \
   --show-error \
@@ -33,7 +33,7 @@ HTTP_RESPONSE=$(curl \
 )
 HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
 
-if [ $HTTP_STATUS -eq 200 ]; then
+if [ "$HTTP_STATUS" -eq 200 ]; then
   echo "::notice::Existing release found"
 else
   if [ "${INPUT_CREATE_RELEASE}" = "true" ]; then
