@@ -1,0 +1,44 @@
+name: Upload GitHub Release Artifacts
+description: |
+  Upload Artifacts to a GitHub release.
+  Optionally creates the release if it doesn't exist.
+author: Gregor Riepl <gregor.riepl@swisstxt.ch>
+branding:
+  icon: upload-cloud
+  color: red
+inputs:
+  files:
+    description: |
+      List of files or paths to upload, separated by space.
+      Upload all files in the working directory if missing.
+    default: ""
+    required: false
+  created_tag:
+    description: |
+      Create a release from a specific tag.
+      If missing, try to derive it from the commit ID.
+    default: ""
+    required: false
+  create_release:
+    description: |
+      If false, fails when the release doesn't exist.
+      If true and the release doesn't exist, it is created automatically.
+    default: "false"
+    required: false
+  release_name:
+    description: |
+      When creating a new release, use the value of this input as the release name.
+      Otherwise, use the name of the tag.
+    default: ""
+    required: false
+  create_draft:
+    description: |
+      When creating a release, specifies if a normal (false) or draft (true) release should be created.
+      Ignored when not creating a release.
+    default: "false"
+    required: false
+runs:
+  using: docker
+  image: Dockerfile
+  env:
+    GITHUB_TOKEN: ${{ github.token }}
