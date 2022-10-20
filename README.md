@@ -63,6 +63,13 @@ jobs:
 **Note**: If you use the `create_draft` option, a new draft release will be created on every run.
 Without the option, assets will be uploaded into an existing release. 
 
+## Notes
+
+This action uses an Alpine Linux build container and does all its work with busybox, curl and jq.
+
+GitHub uploads can sometimes fail on the first attempt. If this happens, retry the release step on your Action
+until all artifacts have been uploaded.
+
 ## Acknowledgments + Legal
 
 Copyright © 2022 SWISS TXT AG - All rights reserved

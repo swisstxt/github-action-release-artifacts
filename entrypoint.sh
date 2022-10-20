@@ -37,9 +37,9 @@ if [ "$HTTP_STATUS" -eq 200 ]; then
     CONTENT=$(echo "$RESPONSE" | sed "$ d" | jq --args)
     UPLOAD_URL=$(echo "$CONTENT" | jq -r ".upload_url")
     echo "::notice::Release found"
-    echo "::set-output name=id::$(echo "$CONTENT" | jq -r ".id")"
-    echo "::set-output name=html_url::$(echo "$CONTENT" | jq -r ".html_url")"
-    echo "::set-output name=upload_url::${UPLOAD_URL}"
+    echo "id=$(echo "$CONTENT" | jq -r ".id")" >> "${GITHUB_OUTPUT}"
+    echo "html_url=$(echo "$CONTENT" | jq -r ".html_url")" >> "${GITHUB_OUTPUT}"
+    echo "upload_url=${UPLOAD_URL}" >> "${GITHUB_OUTPUT}"
 elif [ "$HTTP_STATUS" -eq 403 ]; then
   echo "::error::Authorization error when accessing the GitHub API"
   exit 1
@@ -62,9 +62,9 @@ elif [ "$HTTP_STATUS" -eq 404 ]; then
       echo "::notice::Release successfully created"
       UPLOAD_URL=$(echo "$CONTENT" | jq -r ".upload_url")
       echo "::notice::Release found"
-      echo "::set-output name=id::$(echo "$CONTENT" | jq -r ".id")"
-      echo "::set-output name=html_url::$(echo "$CONTENT" | jq -r ".html_url")"
-      echo "::set-output name=upload_url::${UPLOAD_URL}"
+      echo "id=$(echo "$CONTENT" | jq -r ".id")" >> "${GITHUB_OUTPUT}"
+      echo "html_url=$(echo "$CONTENT" | jq -r ".html_url")" >> "${GITHUB_OUTPUT}"
+      echo "upload_url=${UPLOAD_URL}" >> "${GITHUB_OUTPUT}"
     else
       echo "::error::Failed to create release: ${HTTP_STATUS}"
       echo "$CONTENT" | jq ".errors"
